@@ -1,8 +1,18 @@
+import Navbar from "./components/Navbar";
+import Pizzas from "./components/Pizzas";
+
 function App() {
+	
 	return (
-		<div>
-			Hello
-		</div>
+		<>
+			<header>
+				<Navbar/>
+			</header>
+			
+			<main>
+				<Pizzas/>
+			</main>
+		</>
 	);
 }
 
