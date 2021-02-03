@@ -10,6 +10,7 @@ function App() {
 			</header>
 			
 			<main>
+				<h1 style={{textAlign:"center",margin:"30px 0",fontSize:"3em"}}>Welcome to Ivan's Pizza! Artisan since 2021</h1>
 				<Pizzas/>
 			</main>
 		</>
