@@ -1,4 +1,4 @@
-import React from "react";
+import React  from "react";
 import {
 	AppBar,
 	Button,
@@ -6,7 +6,8 @@ import {
 	Grid,
 	makeStyles,
 	Toolbar
-}            from "@material-ui/core";
+}             from "@material-ui/core";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	title: {
@@ -28,9 +29,11 @@ const Navbar = () => {
 						
 						<h1 className={classes.title}>Ivan's Pizza</h1>
 						
-						<Button color={"inherit"}
-						        className={classes.homeButton}>Home</Button>
-						<Button variant={"contained"} color={"secondary"}>Add New
+						<Button component={Link} to="/" color={"inherit"}
+						        className={classes.homeButton}> Home
+						</Button>
+						
+						<Button component={Link} to="/create" variant={"contained"} color={"secondary"}>Add New
 							Pizza</Button>
 					</Toolbar>
 				</AppBar>

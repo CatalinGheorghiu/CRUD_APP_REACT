@@ -1,18 +1,32 @@
-import Navbar from "./components/Navbar";
-import Pizzas from "./components/Pizzas";
+import Navbar                                   from "./components/Navbar";
+import Pizzas                                   from "./components/Pizzas";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import PizzaDetails
+                                                from "./components/PizzaDetails";
+import Create                                   from "./components/Create";
 
 function App() {
 	
 	return (
 		<>
-			<header>
-				<Navbar/>
-			</header>
-			
-			<main>
-				<h1 style={{textAlign:"center",margin:"30px 0",fontSize:"3em"}}>Welcome to Ivan's Pizza! Artisan since 2021</h1>
-				<Pizzas/>
-			</main>
+			<Router>
+				<header>
+					<Navbar/>
+				</header>
+				<main>
+					<Switch>
+						<Route exact path="/">
+							<Pizzas/>
+						</Route>
+						<Route path="/pizzas/:id">
+							<PizzaDetails/>
+						</Route>
+						<Route path="/create">
+							<Create/>
+						</Route>
+					</Switch>
+				</main>
+			</Router>
 		</>
 	);
 }

@@ -1,22 +1,30 @@
 import {useEffect, useState} from "react";
 
 const useFetch = (url) => {
+	
 	const [data, setData] = useState();
 	const [isPending, setIsPending] = useState(true);
 	
 	useEffect(() => {
+		const abortController = new AbortController();
 		try {
-			setTimeout(async () => {
-				const res = await fetch(url);
+			(async () => {
+				// setTimeout( () => {
+				const res = await fetch(url, {signal: abortController.signal});
 				const data = await res.json();
 				setData(data);
 				setIsPending(false);
-			}, 1000);
+				// }, 100);
+			})();
+			
 		} catch (err) {
+			if (err.name === "AbortError") {
+				setData(null);
+			}
 			console.error(err);
 		}
-		
-	}, [url]);
+		return () => abortController.abort();
+	},[url]);
 	return {data, isPending};
 };
 

@@ -1,18 +1,21 @@
 import {
 	Box,
+	Button,
+	Checkbox,
+	FormControlLabel,
+	FormGroup,
 	Grid,
 	List,
-	ListItem,
 	makeStyles,
 	Paper,
 	Typography
 }                          from "@material-ui/core";
-import LocalPizzaSharpIcon from "@material-ui/icons/LocalPizzaSharp";
 import Skeleton            from "@material-ui/lab/Skeleton";
 import {v4 as uuid}        from "uuid";
 import useFetch            from "../hooks/useFetch";
+import {LocalPizzaRounded} from "@material-ui/icons";
+import {Link, useHistory}  from "react-router-dom";
 
-// console.log(pizzas.map(pizza => pizza.id));
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
@@ -27,91 +30,147 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		flexDirection: "column",
 		width: "350px",
+		height: "650px",
 		margin: theme.spacing(3),
-		borderRadius: 10
+		borderRadius: 10,
 	},
 	title: {
 		paddingTop: 10,
+		margin: 10
+	},
+	para: {
+		padding: "0 20px ",
+		margin: "20px 0"
 	},
 	lists: {
 		display: "flex",
 		flexWrap: "wrap",
-		justifyContent: "space-around"
+		padding: "20px",
+		height: "200px"
 	},
 	listItem: {
 		display: "inline",
-		// width: "50%",
+		
+	},
+	img: {
+		padding: 10,
+		borderRadius: 17
+	},
+	skeleton1: {
+		width: "80%",
+		margin: "auto",
+		height: 50,
+	},
+	skeleton2: {
+		width: "50%",
+		margin: " auto",
+		height: 30,
+		marginBottom: "20px"
+	}, skeleton3: {
+		width: "90%",
+		height: "50%",
+		margin: "auto"
+	},
+	skeleton4: {
+		display: "flex",
+		justifyContent: "center",
+		alignContent: "center",
+		width: "80%",
+		margin: "25px",
+	},
+	skeleton5: {
+		width: "80%",
+		margin: "auto",
+		marginBottom: "20px",
+		height: 150,
 	}
 }));
 const Pizzas = () => {
 	const classes = useStyles();
 	
+	const history = useHistory();
 	const {data: pizzas, isPending} = useFetch("http://localhost:8000/pizzas");
-	console.log(pizzas);
 	
+	const handleClick = (id) => {
+		fetch(`http://localhost:8000/pizzas/${id}`, {
+			method: "DELETE"
+		}).then(() => {
+			console.log("Pizza deleted!");
+			history.go(0);
+		});
+	};
 	
 	return (
 		<>
-			{/*<Grid container justify={"center"} alignContent={"center"}>*/}
-			{/*	{pizzas && pizzas.map(pizza => pizza ?(*/}
-			{/*		*/}
-			{/*		 <Grid item key={uuid()}>*/}
-			{/*		<Paper elevation={3} className={classes.paper}>*/}
-			{/*			<Typography variant={"h4"} component={"h1"}*/}
-			{/*			            align={"center"} className={classes.title}*/}
-			{/*			            color={"secondary"}>*/}
-			{/*				{pizza.name}*/}
-			{/*			</Typography>*/}
-			{/*			<Box fontStyle="italic" textAlign="center"*/}
-			{/*			     marginBottom={3}> {pizza.origin}</Box>*/}
-			{/*			*/}
-			{/*			<img src={pizza.img} alt=""/>*/}
-			{/*			*/}
-			{/*			<List className={classes.lists}>*/}
-			{/*				{pizza.ingredients.map(ingredient => (*/}
-			{/*					<ListItem key={uuid()}>*/}
-			{/*						<Typography variant="body2">*/}
-			{/*							<LocalPizzaSharpIcon color={"secondary"}/>*/}
-			{/*							{ingredient}*/}
-			{/*						</Typography>*/}
-			{/*					</ListItem>*/}
-			{/*				))}*/}
-			{/*			</List>*/}
-			{/*		</Paper>*/}
-			{/*	</Grid>*/}
-			{/*		) : (<Skeleton variant="rect" width={210} height={118}/>)) }*/}
-			
-			
-			{/*</Grid>*/}
-			
-			<Grid container wrap="nowrap">
-				{(isPending ? Array.from(new Array(40)) : pizzas).map((pizza, index) => (
-					<Box key={index} width={210} marginRight={0.5} my={5}>
-						{pizza ? (
-							<img style={{ width: 210, height: 118 }} alt={pizza.title} src={pizza.img} />
-						) : (
-							<Skeleton variant="rect" width={210} height={118} />
-						)}
-						
-						{pizza ? (
-							<Box pr={2}>
-								<Typography gutterBottom variant="body2">
-									{pizza.name}
-								</Typography>
-								<Typography display="block" variant="caption" color="textSecondary">
-									{pizza.origin}
-								</Typography>
-								<Typography variant="caption" color="textSecondary">
-									{`${pizza.views} • ${pizza.createdAt}`}
-								</Typography>
-							</Box>
-						) : (
-							<Box pt={0.5}>
-								<Skeleton />
-								<Skeleton width="60%" />
-							</Box>
-						)}
-					</Box>
+			<Typography component={"h1"} variant={"h3"} className={classes.title}
+			            align={"center"}>Welcome to Ivan's Pizza!</Typography>
+			<Grid container justify={"center"} alignContent={"center"}>
+				{(isPending ? Array.from(new Array(40)) : pizzas).map(pizza => (
+					<Grid item key={uuid()}>
+						{
+							<Paper elevation={3} className={classes.paper}>
+								
+								{pizza ? <Typography variant={"h4"} component={"h1"}
+								                     align={"center"} className={classes.title}
+								                     color={"secondary"}>
+										{pizza.name}
+									</Typography> :
+									
+									<Skeleton variant="text" className={classes.skeleton1}/>
+								}
+								
+								
+								{pizza ? <Box fontStyle="italic" textAlign="center"
+								              marginBottom={3}> {pizza.origin}</Box> :
+									
+									<Skeleton className={classes.skeleton2}/>
+								}
+								
+								
+								{pizza ? <img src={pizza.img} alt={pizza.name}
+								              className={classes.img}/> :
+									<Skeleton variant="rect" className={classes.skeleton3}/>}
+								
+								<List className={classes.lists}>
+									{(isPending ? Array.from(new Array(5)) : pizza.ingredients).map(ingredient => (
+										<FormGroup row key={uuid()}>
+											{ingredient ?
+												<FormControlLabel disabled
+												                  control={<Checkbox
+													                  icon={<LocalPizzaRounded
+														                  color={"secondary"}/>}
+													                  name="checkedH"/>}
+												                  label={ingredient}
+												/>
+												
+												: <Box>
+													<Skeleton className={classes.skeleton4}/>
+													<Skeleton className={classes.skeleton4}/>
+												</Box>}
+										</FormGroup>
+									))}
+								</List>
+								{pizza ?
+									<Typography variant={"body2"}
+									            className={classes.para}
+									            color={"primary"}>
+										{pizza.description.slice(0, 150)} ...
+									</Typography>
+									: <Skeleton className={classes.skeleton5}/>}
+								{pizza ?
+									<Box display={"flex"} justifyContent={"center"} margin={1}>
+										<Button component={Link} to={`/pizzas/${pizza.id}`}>
+											Read More
+										</Button>
+										<Button color={"secondary"}
+										        variant={"contained"}
+										        onClick={() => handleClick(pizza.id)}>
+											Delete
+										</Button>
+									</Box>
+									: <Skeleton className={classes.skeleton4}/>}
+							</Paper>}
+					</Grid>
 				))}
 			</Grid>
 		
